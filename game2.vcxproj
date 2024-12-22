@@ -160,9 +160,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="include\glad\glad.c" />
+    <ClCompile Include="include\stb\stb.cpp" />
     <ClCompile Include="src\Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Player.h" />
     <ClInclude Include="src\render\Camera.h" />
     <ClInclude Include="src\render\Ebo.h" />
     <ClInclude Include="src\render\Shader.h" />

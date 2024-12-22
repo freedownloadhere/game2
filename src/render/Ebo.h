@@ -15,7 +15,7 @@ public:
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
 	}
 
-	void data(const int indicesData[]) const {
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicesData), indicesData, GL_STATIC_DRAW);
+	void data(const void* data, const GLuint size) const {
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
 	}
 };

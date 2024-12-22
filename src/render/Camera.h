@@ -21,6 +21,13 @@ private:
 	bool firstMouse = true;
 
 public:
+	void update(const glm::vec3& pos, const glm::vec3& front, const float _yaw, const float _pitch) {
+		cameraPos = pos;
+		cameraFront = front;
+		yaw = _yaw;
+		pitch = _pitch;
+	}
+
 	void processKeyboard(GLFWwindow* window, float deltaTime) {
 		const float cameraSpeed = 2.5f * deltaTime;
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
