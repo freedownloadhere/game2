@@ -33,22 +33,22 @@ public:
 		if (!willCollide(collider, velocity, deltaTime))
 			return velocity;
 
-		glm::vec3 dvel = velocity * deltaTime;
+		glm::vec3 dvel = velocity;
 
 		if (d1.x > 0.0f)
-			dvel.x = std::min(dvel.x, d1.x);
+			dvel.x = std::min(dvel.x * deltaTime, d1.x);
 		else if (d2.x < 0.0f)
-			dvel.x = std::max(dvel.x, d2.x);
+			dvel.x = std::max(dvel.x * deltaTime, d2.x);
 
 		if (d1.y > 0.0f)
-			dvel.y = std::min(dvel.y, d1.y);
+			dvel.y = std::min(dvel.y * deltaTime, d1.y);
 		else if (d2.y < 0.0f)
-			dvel.y = std::max(dvel.y, d2.y);
+			dvel.y = std::max(dvel.y * deltaTime, d2.y);
 
 		if (d1.z > 0.0f)
-			dvel.z = std::min(dvel.z, d1.z);
+			dvel.z = std::min(dvel.z * deltaTime, d1.z);
 		else if (d2.z < 0.0f)
-			dvel.z = std::max(dvel.z, d2.z);
+			dvel.z = std::max(dvel.z * deltaTime, d2.z);
 
 		return dvel;
 	}

@@ -1,6 +1,7 @@
 #version 330 core
 out vec4 FragColor;
 
+// between 0 and 1
 in vec4 fragPos;
 
 void main() {
