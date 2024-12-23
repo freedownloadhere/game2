@@ -41,31 +41,44 @@ int main() {
 	gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 	gladLoadGL();
 	glViewport(0, 0, 1280, 720);
-	glEnable(GL_DEPTH_TEST);
+
 	Shader shader("shaders/default.vert", "shaders/default.frag");
+	Shader wireframe("shaders/wireframe.vert", "shaders/wireframe.frag");
 	Vao vao(5 * sizeof(float));
 	Vbo vbo;
 	Ebo ebo;
 	Texture2D tex("res/parchet.jpg", GL_RGB);
+
 	vao.bind();
 	vbo.bind();
 	ebo.bind();
 	vbo.data(epicFloor, sizeof(epicFloor));
 	ebo.data(indices, sizeof(indices));
-	vao.attrib(3, GL_FLOAT, sizeof(float)); // pos
-	vao.attrib(2, GL_FLOAT, sizeof(float)); // texcoord
+	vao.attrib(3, GL_FLOAT, sizeof(float));
+	vao.attrib(2, GL_FLOAT, sizeof(float));
+
 	shader.use();
-	tex.bind(0);
 	shader.setInt("tex", 0);
+	tex.bind(0);
+
 	world.obstacles.push_back(SolidRectangle(Hitbox(glm::vec3(0.0f, 4.0f, 0.0f), glm::vec3(1.0f, 0.5f, 1.0f))));
 	world.obstacles.push_back(SolidRectangle(Hitbox(glm::vec3(2.0f, -1.0f, 2.0f), glm::vec3(1.0f, 4.0f, 1.0f))));
+
 	float lastTime = glfwGetTime();
 	while (!glfwWindowShouldClose(window)) {
 		glfwPollEvents();
+
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClearColor(0.1f, 0.2f, 0.6f, 1.0f);
+
 		const float currentTime = glfwGetTime();
 		const float deltaTime = currentTime - lastTime;
 		lastTime = currentTime;
+
 		world.update(window, deltaTime);
+
+		glEnable(GL_DEPTH_TEST);
+		shader.use();
 		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::scale(model, glm::vec3(10.0f, 1.0f, 10.0f));
 		model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
@@ -75,25 +88,32 @@ int main() {
 		shader.setMat4("view", view);
 		shader.setMat4("proj", proj);
 		vbo.data(epicFloor, sizeof(epicFloor));
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glClearColor(0.1f, 0.2f, 0.6f, 1.0f);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
 		for (const auto& obstacle : world.obstacles) {
 			const auto& vertices = obstacle.hitbox.getVertices();
+			vbo.data(vertices.data(), vertices.size() * sizeof(float));
+
 			glm::mat4 model = glm::mat4(1.0f);
 			model = glm::translate(model, obstacle.hitbox.corner);
 			model = glm::scale(model, obstacle.hitbox.length);
 			shader.setMat4("model", model);
-			vbo.data(vertices.data(), vertices.size() * sizeof(float));
+
 			glDrawArrays(GL_TRIANGLES, 0, 36);
 		}
+
 		const auto& vertices = world.player.hitbox.getVertices();
+		vbo.data(vertices.data(), vertices.size() * sizeof(float));
+
+		glDisable(GL_DEPTH_TEST);
+		wireframe.use();
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, world.player.hitbox.corner);
 		model = glm::scale(model, world.player.hitbox.length);
-		shader.setMat4("model", model);
-		vbo.data(vertices.data(), vertices.size() * sizeof(float));
-		glDrawArrays(GL_LINES, 0, 36);
+		wireframe.setMat4("model", model);
+		wireframe.setMat4("view", view);
+		wireframe.setMat4("proj", proj);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
 		glfwSwapBuffers(window);
 	}
 	return 0;

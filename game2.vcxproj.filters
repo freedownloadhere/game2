@@ -60,5 +60,7 @@
   <ItemGroup>
     <None Include="shaders\default.vert" />
     <None Include="shaders\default.frag" />
+    <None Include="shaders\wireframe.frag" />
+    <None Include="shaders\wireframe.vert" />
   </ItemGroup>
 </Project>
