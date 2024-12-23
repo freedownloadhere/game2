@@ -164,6 +164,7 @@
     <ClCompile Include="src\Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Hitbox.h" />
     <ClInclude Include="src\Player.h" />
     <ClInclude Include="src\render\Camera.h" />
     <ClInclude Include="src\render\Ebo.h" />
@@ -171,6 +172,8 @@
     <ClInclude Include="src\render\Texture2D.h" />
     <ClInclude Include="src\render\Vao.h" />
     <ClInclude Include="src\render\Vbo.h" />
+    <ClInclude Include="src\SolidRectangle.h" />
+    <ClInclude Include="src\World.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\default.frag" />

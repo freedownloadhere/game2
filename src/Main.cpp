@@ -9,7 +9,7 @@
 #include "render/Ebo.h"
 #include "render/Camera.h"
 #include "render/Texture2D.h"
-#include "Player.h"
+#include "World.h"
 
 const float epicFloor[] = {
 	 0.5f,  0.5f, 0.0f,   1.0f, 1.0f,   // top right
@@ -23,10 +23,10 @@ const int indices[] = {
 	2, 3, 0
 };
 
-static Player player;
+static World world;
 
 static void cursorPosCallback(GLFWwindow* window, double x, double y) {
-	player.processMouse(window, x, y);
+	world.player.processMouse(window, x, y);
 }
 
 int main() {
@@ -57,25 +57,43 @@ int main() {
 	shader.use();
 	tex.bind(0);
 	shader.setInt("tex", 0);
+	world.obstacles.push_back(SolidRectangle(Hitbox(glm::vec3(0.0f, 4.0f, 0.0f), glm::vec3(1.0f, 0.5f, 1.0f))));
+	world.obstacles.push_back(SolidRectangle(Hitbox(glm::vec3(2.0f, -1.0f, 2.0f), glm::vec3(1.0f, 4.0f, 1.0f))));
 	float lastTime = glfwGetTime();
 	while (!glfwWindowShouldClose(window)) {
 		glfwPollEvents();
 		const float currentTime = glfwGetTime();
 		const float deltaTime = currentTime - lastTime;
 		lastTime = currentTime;
-		player.update(window, deltaTime);
+		world.update(window, deltaTime);
 		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(0.0f, -0.5f, 0.0f));
 		model = glm::scale(model, glm::vec3(10.0f, 1.0f, 10.0f));
 		model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-		glm::mat4 view = player.cam.getViewMat();
-		glm::mat4 proj = player.cam.getPerspective(1280, 720);
+		glm::mat4 view = world.player.cam.getViewMat();
+		glm::mat4 proj = world.player.cam.getPerspective(1280, 720);
 		shader.setMat4("model", model);
 		shader.setMat4("view", view);
 		shader.setMat4("proj", proj);
+		vbo.data(epicFloor, sizeof(epicFloor));
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearColor(0.1f, 0.2f, 0.6f, 1.0f);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		for (const auto& obstacle : world.obstacles) {
+			const auto& vertices = obstacle.hitbox.getVertices();
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, obstacle.hitbox.corner);
+			model = glm::scale(model, obstacle.hitbox.length);
+			shader.setMat4("model", model);
+			vbo.data(vertices.data(), vertices.size() * sizeof(float));
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+		}
+		const auto& vertices = world.player.hitbox.getVertices();
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, world.player.hitbox.corner);
+		model = glm::scale(model, world.player.hitbox.length);
+		shader.setMat4("model", model);
+		vbo.data(vertices.data(), vertices.size() * sizeof(float));
+		glDrawArrays(GL_LINES, 0, 36);
 		glfwSwapBuffers(window);
 	}
 	return 0;
