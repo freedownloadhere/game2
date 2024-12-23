@@ -27,32 +27,28 @@ public:
 		const glm::vec3 c11 = collider.corner;
 		const glm::vec3 o22 = o11 + length;
 		const glm::vec3 c22 = c11 + collider.length;
+		const glm::vec3 d1 = o11 - c22;
+		const glm::vec3 d2 = o22 - c11;
 
 		if (!willCollide(collider, velocity, deltaTime))
 			return velocity;
 
 		glm::vec3 dvel = velocity * deltaTime;
 
-		const float dx1 = o11.x - c22.x;
-		const float dx2 = o22.x - c11.x;
-		if (dx1 > 0.0f)
-			dvel.x = std::min(dvel.x, dx1);
-		else if (dx2 < 0.0f)
-			dvel.x = std::max(dvel.x, dx2);
+		if (d1.x > 0.0f)
+			dvel.x = std::min(dvel.x, d1.x);
+		else if (d2.x < 0.0f)
+			dvel.x = std::max(dvel.x, d2.x);
 
-		const float dy1 = o11.y - c22.y;
-		const float dy2 = o22.y - c11.y;
-		if (dy1 > 0.0f)
-			dvel.y = std::min(dvel.y, dy1);
-		else if (dy2 < 0.0f)
-			dvel.y = std::max(dvel.y, dy2);
+		if (d1.y > 0.0f)
+			dvel.y = std::min(dvel.y, d1.y);
+		else if (d2.y < 0.0f)
+			dvel.y = std::max(dvel.y, d2.y);
 
-		const float dz1 = o11.z - c22.z;
-		const float dz2 = o22.z - c11.z;
-		if (dz1 > 0.0f)
-			dvel.z = std::min(dvel.z, dz1);
-		else if (dz2 < 0.0f)
-			dvel.z = std::max(dvel.z, dz2);
+		if (d1.z > 0.0f)
+			dvel.z = std::min(dvel.z, d1.z);
+		else if (d2.z < 0.0f)
+			dvel.z = std::max(dvel.z, d2.z);
 
 		return dvel;
 	}

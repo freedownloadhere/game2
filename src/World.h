@@ -20,7 +20,5 @@ public:
 			player.velocity = obstacle.hitbox.collide(player.hitbox, player.velocity, deltaTime);
 
 		player.updateMove(deltaTime);
-
-		std::cout << player.pos.x << ' ' << player.pos.y << ' ' << player.pos.z << '\n';
 	}
 };
