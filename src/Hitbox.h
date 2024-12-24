@@ -19,6 +19,10 @@ public:
 			if ((thisPos1.y <= colliderPos1.y && colliderPos1.y <= thisPos2.y) || (thisPos1.y <= colliderPos2.y && colliderPos2.y <= thisPos2.y))
 				if ((thisPos1.z <= colliderPos1.z && colliderPos1.z <= thisPos2.z) || (thisPos1.z <= colliderPos2.z && colliderPos2.z <= thisPos2.z))
 					return true;
+		if ((colliderPos1.x <= thisPos1.x && thisPos1.x <= colliderPos2.x) || (colliderPos1.x <= thisPos2.x && thisPos2.x <= colliderPos2.x))
+			if ((colliderPos1.y <= thisPos1.y && thisPos1.y <= colliderPos2.y) || (colliderPos1.y <= thisPos2.y && thisPos2.y <= colliderPos2.y))
+				if ((colliderPos1.z <= thisPos1.z && thisPos1.z <= colliderPos2.z) || (colliderPos1.z <= thisPos2.z && thisPos2.z <= colliderPos2.z))
+					return true;
 		return false;
 	}
 

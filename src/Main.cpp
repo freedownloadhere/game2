@@ -61,7 +61,7 @@ int main() {
 	shader.setInt("tex", 0);
 	tex.bind(0);
 
-	world.obstacles.push_back(SolidRectangle(Hitbox(glm::vec3(0.0f, 4.0f, 0.0f), glm::vec3(1.0f, 0.5f, 1.0f))));
+	world.obstacles.push_back(SolidRectangle(Hitbox(glm::vec3(0.0f, 4.0f, 0.0f), glm::vec3(0.3f, 0.3f, 0.3f))));
 	world.obstacles.push_back(SolidRectangle(Hitbox(glm::vec3(2.0f, -1.0f, 2.0f), glm::vec3(1.0f, 4.0f, 1.0f))));
 
 	float lastTime = glfwGetTime();
